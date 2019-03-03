@@ -1,0 +1,43 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<form action="" id="contact">
+  Name:<br>
+  <input type="text" name="name" maxlength="50" value="">
+  <br>
+  E-mail:<br>
+  <input type="text" name="email" maxlength="50" value="">
+  <br>Message:<br>
+  <textarea type="text" name="message" maxlength="500" rows="5" cols="40"> Enter your text here... </textarea>
+  <br><br>
+  <input type="button" onclick="submit_form()" value="Submit form">
+</form>
+
+
+<script>
+function submit_form() {
+	const form = document.querySelector('form[id=contact]');
+	const inputs = form.querySelectorAll('input[type=text],textarea[type=text]');
+	const data = Array.from(inputs, input => [input.name, input.value])
+		.reduce((acc, [k, v]) => {
+			acc[k] = v;
+			return acc
+		}, {})
+	//console.log(data)
+	$.ajax({
+		url: "${api_deployment_url}",
+		crossDomain: true,
+		data: JSON.stringify(data),
+		type: "POST",
+		dataType: "json",
+		contentType: "application/json",
+		success: function (data) {
+			alert("Data returned from lambda :" + JSON.stringify(data));
+			window.location.replace("http://google.com");
+		},
+		error: function (jqXHR, textStatus, errorThrown) {
+			alert("Error, something went wrong here : " + errorThrown);
+		}
+	});
+
+}
+</script>
